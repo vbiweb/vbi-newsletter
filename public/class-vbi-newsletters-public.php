@@ -22,6 +22,9 @@
  */
 class Vbi_Newsletters_Public {
 
+
+	protected $form_id = '2abe07bf-4abc-4e54-b4da-ad8d118c365b';
+
 	/**
 	 * The ID of this plugin.
 	 *
@@ -95,19 +98,128 @@ class Vbi_Newsletters_Public {
 		 * between the defined hooks and the functions defined in this
 		 * class.
 		 */
-
-		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/vbi-newsletters-public.js', array( 'jquery' ), $this->version, false );
+		wp_enqueue_script( $this->plugin_name.'-blockUI','//malsup.github.io/jquery.blockUI.js', array( 'jquery' ), $this->version, false );
+		wp_enqueue_script( $this->plugin_name.'-validate', plugin_dir_url( __FILE__ ) . 'js/jquery.validate.min.js', array( 'jquery' ), $this->version, false );
+		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/vbi-newsletters-public.js',  array( $this->plugin_name.'-blockUI',$this->plugin_name.'-validate','jquery' ), $this->version, false );
+			wp_localize_script($this->plugin_name, 'newsletters_vars', array(
+				'_newsletters_ajax_url' => esc_url( admin_url( 'admin-ajax.php' ) ),
+			));
 
 	}
 
 	public function add_widget_shortcode()
 	{
 		add_shortcode( 'welcome' , array( $this , 'welcome_callback' ) );
+		add_shortcode( 'vbi-newsletters',array($this, 'newsletters_callback') );
 	}
 
 	public function welcome_callback()
 	{
 		return 'VBI  Newsletter Plugin - Welcome';
 	}
+
+	public function newsletters_callback($atts)
+	{
+		$atts = shortcode_atts(
+			array(
+				'type' => '',
+			) , 
+			$atts , 
+			'vbi-newsletters' 
+		);
+		ob_start();
+		?>
+		<div id="newsletter_registration_form_container">
+	            <form action="" id="newsletter_reg" method="post" class="clearfix hubspot_forms">
+	                <input id="pagename" name="pagename" value="<?php global $post; echo $post->post_title; ?>" type="hidden" />
+	                <input id="pageurl" name="pageurl" value="<?php echo "https://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']; ?>" type="hidden" />
+	                <input id="hubutk" name="hubutk" value="<?php echo $_COOKIE['hubspotutk']; ?>" type="hidden" />
+	                <input id="ipaddr" name="ipaddr" value="<?php echo $_SERVER['REMOTE_ADDR']; ?>" type="hidden" />
+
+	                <h3 style="font-size:14px;" class="clearfix hubspot_forms_fields">Keep up with our latest Blogs:</h3>
+	                <p class="clearfix hubspot_forms_fields">
+	                    <!-- <label class="placeholder" for="email"> Email<span class="required">*</span></label> -->
+	                    <input id="email" name="email" required="" aria-required="true"  placeholder="Email" type="text" value="<?php echo $business_email; ?>" />
+	                </p>
+
+	                <p class="message"></p>
+	                <p class="clearfix hubspot_forms_fields">
+	                    <input id="webinar_reg_submit" name="webinar_reg_submit" value="Submit" type="submit">
+	                </p>
+	            </form>
+		 </div>
+		<?php
+		$output = ob_get_clean();
+		return $output;
+	}
+
+		public function newsletters_submission()
+		{
+		
+			$email 						= $_POST['email'];
+			
+			$page_url 					= $_POST['pageurl'];
+			$page_name 					= $_POST['pagename'];
+			$hubspotutk      			= $_POST['hubspotutk'];
+			$ip_addr         			= $_POST['ipaddr'];
+
+			$hs_context = array(
+				'hutk' 		=> $hubspotutk,
+				'ipAddress' => $ip_addr,
+				'pageUrl' 	=> $page_url,
+				'pageName' 	=> $page_name
+			);
+
+			$hs_context_json = json_encode($hs_context);
+
+			$str_post = "&email=" . urlencode($email) 
+			. "&hs_context=" . urlencode($hs_context_json);
+
+			$endpoint = 'https://forms.hubspot.com/uploads/form/v2/5932932/2abe07bf-4abc-4e54-b4da-ad8d118c365b';
+
+			$ch = curl_init();
+			curl_setopt($ch, CURLOPT_POST, true);
+			curl_setopt($ch, CURLOPT_POSTFIELDS, $str_post);
+			curl_setopt($ch, CURLOPT_URL, $endpoint);
+			curl_setopt($ch, CURLOPT_HTTPHEADER, array( 'Content-Type: application/x-www-form-urlencoded' ));
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+			$response    = curl_exec($ch); 
+			$status_code = curl_getinfo($ch, CURLINFO_HTTP_CODE); 
+			
+			curl_close($ch);
+
+			$message = array();
+
+			$message['hubspot'] = $status_code;
+
+			if($status_code != 204){
+				wp_send_json($message);
+			}
+
+			// $endpoint = 'http://api.visualbi.com/gotowebinar/register/';
+
+			// $str_post = "first_name=" . $firstname 
+			//     . "&last_name=" . $lastname 
+			//     . "&email=" . $email 
+			//     . "&source=" . $campaign_source 
+			//     . "&webinar_id=" . $webinar_id;
+
+			// $ch = curl_init();
+			// curl_setopt($ch, CURLOPT_POST, true);
+			// curl_setopt($ch, CURLOPT_POSTFIELDS, $str_post);
+			// curl_setopt($ch, CURLOPT_URL, $endpoint);
+			// curl_setopt($ch, CURLOPT_RETURNTRANSFER, true); 
+
+			// $response    = curl_exec($ch); 
+			// $status_code = curl_getinfo($ch, CURLINFO_HTTP_CODE); 
+			
+			// curl_close($ch);
+
+			// $message['gotowebinar'] = $status_code;
+
+		    wp_send_json($message);		
+
+		}
 
 }
