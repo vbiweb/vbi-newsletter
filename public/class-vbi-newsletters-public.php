@@ -23,7 +23,6 @@
 class Vbi_Newsletters_Public {
 
 
-	protected $form_id = '2abe07bf-4abc-4e54-b4da-ad8d118c365b';
 
 	/**
 	 * The ID of this plugin.
@@ -75,7 +74,7 @@ class Vbi_Newsletters_Public {
 		 * between the defined hooks and the functions defined in this
 		 * class.
 		 */
-
+// 
 		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/vbi-newsletters-public.css', array(), $this->version, 'all' );
 
 	}
@@ -107,6 +106,7 @@ class Vbi_Newsletters_Public {
 
 	}
 
+
 	public function add_widget_shortcode()
 	{
 		add_shortcode( 'welcome' , array( $this , 'welcome_callback' ) );
@@ -122,29 +122,32 @@ class Vbi_Newsletters_Public {
 	{
 		$atts = shortcode_atts(
 			array(
-				'type' => '',
+				'title' => '',
+				'type' => 'shortcode',
 			) , 
 			$atts , 
 			'vbi-newsletters' 
 		);
+		$title = $atts['title'];
+		$type = $atts['type'];
 		ob_start();
 		?>
 		<div id="newsletter_registration_form_container">
-	            <form action="" id="newsletter_reg" method="post" class="clearfix hubspot_forms">
-	                <input id="pagename" name="pagename" value="<?php global $post; echo $post->post_title; ?>" type="hidden" />
-	                <input id="pageurl" name="pageurl" value="<?php echo "https://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']; ?>" type="hidden" />
-	                <input id="hubutk" name="hubutk" value="<?php echo $_COOKIE['hubspotutk']; ?>" type="hidden" />
-	                <input id="ipaddr" name="ipaddr" value="<?php echo $_SERVER['REMOTE_ADDR']; ?>" type="hidden" />
+	            <form action="" id="<?php echo $type; ?>_newsletter_reg" method="post" class="clearfix hubspot_forms newsletter_reg" >
+	            	<input type="hidden" name="type" id="type" value="<?php echo $type; ?>">
+	                <input id="<?php echo $type; ?>_pagename" name="pagename" value="<?php global $post; echo $post->post_title; ?>" type="hidden" />
+	                <input id="<?php echo $type; ?>_pageurl" name="pageurl" value="<?php echo "https://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']; ?>" type="hidden" />
+	                <input id="<?php echo $type; ?>_hubutk" name="hubutk" value="<?php echo $_COOKIE['hubspotutk']; ?>" type="hidden" />
+	                <input id="<?php echo $type; ?>_ipaddr" name="ipaddr" value="<?php echo $_SERVER['REMOTE_ADDR']; ?>" type="hidden" />
 
-	                <h3 style="font-size:14px;" class="clearfix hubspot_forms_fields">Keep up with our latest Blogs:</h3>
+	                <h3 style="font-size:14px;" class="clearfix hubspot_forms_fields"><?php echo $title ?></h3>
 	                <p class="clearfix hubspot_forms_fields">
-	                    <!-- <label class="placeholder" for="email"> Email<span class="required">*</span></label> -->
-	                    <input id="email" name="email" required="" aria-required="true"  placeholder="Email" type="text" value="<?php echo $business_email; ?>" />
+	                    <input id="<?php echo $type; ?>_email" name="email" required="" aria-required="true"  placeholder="Email" type="text" value="<?php echo $business_email; ?>" />
 	                </p>
 
 	                <p class="message"></p>
 	                <p class="clearfix hubspot_forms_fields">
-	                    <input id="webinar_reg_submit" name="webinar_reg_submit" value="Submit" type="submit">
+	                    <input id="<?php echo $type; ?>_submit" name="<?php echo $type; ?>_submit" value="Submit" type="submit">
 	                </p>
 	            </form>
 		 </div>
@@ -199,11 +202,9 @@ class Vbi_Newsletters_Public {
 
 			// $endpoint = 'http://api.visualbi.com/gotowebinar/register/';
 
-			// $str_post = "first_name=" . $firstname 
-			//     . "&last_name=" . $lastname 
-			//     . "&email=" . $email 
-			//     . "&source=" . $campaign_source 
-			//     . "&webinar_id=" . $webinar_id;
+			// $str_post = "&email=" . urlencode($email) 
+			// . "&hs_context=" . urlencode($hs_context_json);
+
 
 			// $ch = curl_init();
 			// curl_setopt($ch, CURLOPT_POST, true);
@@ -222,4 +223,5 @@ class Vbi_Newsletters_Public {
 
 		}
 
+	
 }

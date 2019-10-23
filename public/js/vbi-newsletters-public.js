@@ -1,6 +1,5 @@
 			jQuery(document).ready(function(e){
-						console.log(newsletters_vars._newsletters_ajax_url);
-
+				
 				function checkSpecificDomain(email,domain){
 				    var at_index = email.indexOf('@');
 				    if(at_index !== -1){
@@ -36,7 +35,7 @@
 		        	is_blocked = false;
 
 		        	for(i = 0; i< emails.length; i++){
-		        		if(checkSpecificDomain(jQuery('#email').val(),emails[i])){
+		        		if(checkSpecificDomain(value,emails[i])){
 		        			is_blocked = true;
 		        			break;
 		        		}
@@ -56,7 +55,7 @@
 		        	is_blocked = false;
 
 		        	for(i = 0; i< emails.length; i++){
-		        		if(checkSpecificDomain(jQuery('#email').val(),emails[i])){
+		        		if(checkSpecificDomain(value,emails[i])){
 		        			is_blocked = true;
 		        			break;
 		        		}
@@ -70,7 +69,7 @@
 
 		        /**************************************************/
 
-    			jQuery('form#newsletter_reg').validate({
+		       var validate_json = {
     	            rules: {
     	            	
     	                "email": {
@@ -80,15 +79,15 @@
     						// CheckConsultantsAccount: true
     	                }
     	            },
-                    submitHandler: function () {
-					
-						var em = jQuery("input#email").val();
-					
-						var pn = jQuery("input#pagename").val();
-						var pu = jQuery("input#pageurl").val();
-						var hs = jQuery("input#hubutk").val();
-						var ip = jQuery("input#ipaddr").val();
+                    submitHandler: function (form) {
 
+                    	var action_form = jQuery(this);	
+                    	var type = action_form[0].currentForm.firstElementChild.value;
+						var em = jQuery("input#"+type+"_email").val();
+						var pn = jQuery("input#"+type+"_pagename").val();
+						var pu = jQuery("input#"+type+"_pageurl").val();
+						var hs = jQuery("input#"+type+"_hubutk").val();
+						var ip = jQuery("input#"+type+"_ipaddr").val();
 						var data = {
 						  	action: 'newsletters_submission',
 						 	email: em,
@@ -120,22 +119,23 @@
 					        },
 						};
 
-						jQuery('form#newsletter_reg').block(block_config);
-						console.log(newsletters_vars._newsletters_ajax_url);
+						jQuery('form#'+type+'_newsletter_reg').block(block_config);
 					    jQuery.post(newsletters_vars._newsletters_ajax_url, data, function(response){
-	                    	console.log(response);
 	                    	if(response.hubspot == "204"){
-	                    		jQuery('form#newsletter_reg p.message').html('Form Submitted Successfully.');
+	                    		jQuery('form#'+type+'_newsletter_reg p.message').html('Form Submitted Successfully.');
 	                    	}else if(response.error == 'inemail'){
-	                    		jQuery('form#newsletter_reg p.message').html('Please enter a valid business email.');
+	                    		jQuery('form#'+type+'_newsletter_reg p.message').html('Please enter a valid business email.');
 	                    	}else{
-	                    		jQuery('form#newsletter_reg p.message').html('Submission Failed. Please try Again.');
+	                    		jQuery('form#'+type+'_newsletter_reg p.message').html('Submission Failed. Please try Again.');
 	                    	}
 
-	                    	jQuery('form#newsletter_reg').unblock();
+	                    	jQuery('form#'+type+'_newsletter_reg').unblock();
 
 	                    });		
                     }
-                });
+                };
+
+    			jQuery('#widget_newsletter_reg').validate(validate_json);
+    			jQuery('#shortcode_newsletter_reg').validate(validate_json);
 			});
 

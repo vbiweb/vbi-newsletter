@@ -1,4 +1,122 @@
 /**
- * All of the CSS for your admin-specific functionality should be
+ * All of the CSS for your public-facing functionality should be
  * included in this file.
  */
+
+/* #newsletter_registration_form_container{
+ 	text-align: center !important;
+ }*/
+
+ /*Admin*/
+
+ @media only screen and (max-width:767px){
+ 	.hubspot_forms_fields{
+ 		width:100%;
+ 		float:left;
+ 		/*display: none;*/
+ 	}
+ }
+
+@media only screen and (min-width:768px){
+	.hubspot_forms_fields{
+		width:100%;
+		/*float:left;*/
+	}
+}
+
+.hubspot_forms_fields.message_box{
+	width:100% !important;
+}
+
+form.hubspot_forms input[type="text"], form.hubspot_forms input[type="email"], form.hubspot_forms textarea, form.hubspot_forms select{
+    background-color: #F8F8F8 !important;
+    font-family: 'Quicksand', sans-serif !important;
+    font-size: 16px !important;
+    color: #000000 !important;
+    -moz-border-radius: 4px !important;
+    -webkit-border-radius: 4px !important;
+    border-radius: 25px !important;
+    border:1px solid #cdcdcd !important;
+    padding: 14px 20px !important;
+    height: 50px !important;
+    width:96% !important;
+    -webkit-transition: all .7s ease !important;
+    -moz-transition: all .7s ease !important;
+    -o-transition: all .7s ease !important;
+    transition: all .7s ease !important;
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+    -o-appearance: none !important;
+    appearance: none !important;
+}
+
+form.hubspot_forms select{
+    background:url('https://valqstage.wpengine.com/wp-content/plugins/hubspot-forms/images/select-arrow.png') no-repeat 16px 16px !important;
+    background-position:right !important;
+    background-color:#f8f8f8 !important;
+    background-origin: content-box !important;
+}
+
+form.hubspot_forms textarea{
+    min-height: 100px !important;
+    height: 100px !important;
+    overflow: auto !important;
+    width:96% !important;
+	resize: none !important;
+}
+
+form.hubspot_forms input[type="text"]:focus, form input[type="email"]:focus, form.hubspot_forms textarea:focus, form.hubspot_forms select:focus{
+    background-color: #ffffff !important;
+    -webkit-box-shadow: unset !important;
+    -moz-box-shadow: unset !important;
+    -o-box-shadow: unset !important;
+    -ms-box-shadow: unset !important;
+    box-shadow: unset !important;
+}
+
+form.hubspot_forms input[type="submit"], form.hubspot_forms input[type="button"]{
+	cursor:pointer !important;
+    background-color: #1babe2 !important;
+    border:unset !important;
+    border-radius: 25px !important;
+    font-size: 18px !important;
+    color: #ffffff !important;
+    width: 200px;
+    font-weight: bold !important;
+    padding: 15px 30px !important;
+    letter-spacing: 0.6px !important;
+    margin: 10px 0px !important;
+    -webkit-transition: all .3s ease !important;
+    -moz-transition: all .3s ease !important;
+    -o-transition: all .3s ease !important;
+    transition: all .3s ease !important;
+}
+
+form.hubspot_forms input[type="submit"]:hover, form.hubspot_forms input[type="button"]:hover{
+    background-color: #0c71c3 !important;
+}
+
+form.hubspot_forms label.error{
+	font-size: 16px !important;
+	color: #ff0000 !important;
+	float: left;
+	margin-left: 30px;
+}
+
+p.message{
+	color:#ff0000 !important;
+}
+
+p.message{
+	color:#ff0000 !important;
+}
+
+form.hubspot_forms .required{
+	color:#ff0000 !important;	
+}
+
+form.hubspot_forms .placeholder{
+	font-size:14px;
+	font-weight: bold;
+}
+

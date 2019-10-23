@@ -78,6 +78,7 @@ class Vbi_Newsletters {
 		$this->set_locale();
 		$this->define_admin_hooks();
 		$this->define_public_hooks();
+		$this->set_widget();
 
 	}
 
@@ -109,7 +110,13 @@ class Vbi_Newsletters {
 		 * The class responsible for defining internationalization functionality
 		 * of the plugin.
 		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-vbi-newsletters-i18n.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-vbi-newsletters-i18n.php';	
+
+		/**
+		 * The class responsible for defining widget functionality
+		 * of the plugin.
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-vbi-newsletters-widget.php';
 
 		/**
 		 * The class responsible for defining all actions that occur in the admin area.
@@ -156,6 +163,7 @@ class Vbi_Newsletters {
 
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
+		
 
 	}
 
@@ -176,6 +184,21 @@ class Vbi_Newsletters {
 		$this->loader->add_action( 'wp_ajax_newsletters_submission', $plugin_public, 'newsletters_submission');
 		$this->loader->add_action( 'wp_ajax_no_priv_newsletters_submission', $plugin_public, 'newsletters_submission');
 
+		
+
+	}
+	/**
+	 * Registers the custom widget class 
+	 * of the plugin.
+	 *
+	 * @since    1.0.0
+	 * @access   private
+	 */
+    
+	private function set_widget(){
+
+		$widget = new Vbi_Newsletters_Widget( $this->get_plugin_name(), $this->get_version() );
+		$this->loader->add_action( 'widgets_init', $widget, 'vbi_newsletter_widget' );
 	}
 
 	/**
@@ -217,5 +240,7 @@ class Vbi_Newsletters {
 	public function get_version() {
 		return $this->version;
 	}
+
+
 
 }
