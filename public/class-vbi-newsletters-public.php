@@ -123,15 +123,30 @@ class Vbi_Newsletters_Public {
 		$atts = shortcode_atts(
 			array(
 				'title' => '',
-				'type' => 'shortcode',
+				'description' => '',
+				'button_text' => '',
+				'button_color' => '',
+				'text_color' => '',
+				'type' => '',
+
 			) , 
 			$atts , 
 			'vbi-newsletters' 
 		);
-		$title = $atts['title'];
-		$type = $atts['type'];
+		$title = $atts['title'] ;
+		$description = $atts['description'];
+		$button_text = ($atts['button_text']) ? $atts['button_text'] : 'Submit';
+		$button_color = $atts['button_color'];
+		$text_color = $atts['text_color'];
+		$type = ($atts['type']) ? $atts['type'] : 'shortcode';
 		ob_start();
 		?>
+		<style type="text/css">
+			#<?php echo $type; ?>_submit{
+				color:<?php echo $text_color; ?> !important;
+				background-color:<?php echo $button_color; ?>!important;
+			}
+		</style>
 		<div id="newsletter_registration_form_container">
 	            <form action="" id="<?php echo $type; ?>_newsletter_reg" method="post" class="clearfix hubspot_forms newsletter_reg" >
 	            	<input type="hidden" name="type" id="type" value="<?php echo $type; ?>">
@@ -141,13 +156,14 @@ class Vbi_Newsletters_Public {
 	                <input id="<?php echo $type; ?>_ipaddr" name="ipaddr" value="<?php echo $_SERVER['REMOTE_ADDR']; ?>" type="hidden" />
 
 	                <h3 style="font-size:14px;" class="clearfix hubspot_forms_fields"><?php echo $title ?></h3>
+	                <p><?php echo $description; ?></p>
 	                <p class="clearfix hubspot_forms_fields">
 	                    <input id="<?php echo $type; ?>_email" name="email" required="" aria-required="true"  placeholder="Email" type="text" value="<?php echo $business_email; ?>" />
 	                </p>
 
 	                <p class="message"></p>
 	                <p class="clearfix hubspot_forms_fields">
-	                    <input id="<?php echo $type; ?>_submit" name="<?php echo $type; ?>_submit" value="Submit" type="submit">
+	                    <input id="<?php echo $type; ?>_submit" name="<?php echo $type; ?>_submit" value="<?php echo $button_text; ?>" type="submit">
 	                </p>
 	            </form>
 		 </div>

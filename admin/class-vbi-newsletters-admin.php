@@ -118,106 +118,14 @@ class Vbi_Newsletters_Admin {
 
 	public function newsletters_callback($atts)
 	{
-		$atts = shortcode_atts(
-			array(
-				'title' => '',
-				
-			) , 
-			$atts , 
-			'vbi-newsletters' 
-		);
-		$title = $atts['title'];
-		ob_start();
-		?>
-		<div id="newsletter_registration_form_container">
-	            <form action="" id="newsletter_reg" method="post" class="clearfix hubspot_forms">
-	                <input id="pagename" name="pagename" value="<?php global $post; echo $post->post_title; ?>" type="hidden" />
-	                <input id="pageurl" name="pageurl" value="<?php echo "https://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']; ?>" type="hidden" />
-	                <input id="hubutk" name="hubutk" value="<?php echo $_COOKIE['hubspotutk']; ?>" type="hidden" />
-	                <input id="ipaddr" name="ipaddr" value="<?php echo $_SERVER['REMOTE_ADDR']; ?>" type="hidden" />
-
-	                <h3 style="font-size:14px;" class="clearfix hubspot_forms_fields"><?php echo $title ?></h3>
-	                <p class="clearfix hubspot_forms_fields">
-	                    <input id="email" name="email" required="" aria-required="true"  placeholder="Email" type="text" value="<?php echo $business_email; ?>" />
-	                </p>
-
-	                <p class="message"></p>
-	                <p class="clearfix hubspot_forms_fields">
-	                    <input id="webinar_reg_submit" name="webinar_reg_submit" value="Submit" type="submit">
-	                </p>
-	            </form>
-		 </div>
-		<?php
-		$output = ob_get_clean();
-		return $output;
+		
 	}
 
-		public function newsletters_submission()
-		{
-		
-			$email 						= $_POST['email'];
-			
-			$page_url 					= $_POST['pageurl'];
-			$page_name 					= $_POST['pagename'];
-			$hubspotutk      			= $_POST['hubspotutk'];
-			$ip_addr         			= $_POST['ipaddr'];
-
-			$hs_context = array(
-				'hutk' 		=> $hubspotutk,
-				'ipAddress' => $ip_addr,
-				'pageUrl' 	=> $page_url,
-				'pageName' 	=> $page_name
-			);
-
-			$hs_context_json = json_encode($hs_context);
-
-			$str_post = "&email=" . urlencode($email) 
-			. "&hs_context=" . urlencode($hs_context_json);
-
-			$endpoint = 'https://forms.hubspot.com/uploads/form/v2/5932932/2abe07bf-4abc-4e54-b4da-ad8d118c365b';
-
-			$ch = curl_init();
-			curl_setopt($ch, CURLOPT_POST, true);
-			curl_setopt($ch, CURLOPT_POSTFIELDS, $str_post);
-			curl_setopt($ch, CURLOPT_URL, $endpoint);
-			curl_setopt($ch, CURLOPT_HTTPHEADER, array( 'Content-Type: application/x-www-form-urlencoded' ));
-			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-
-			$response    = curl_exec($ch); 
-			$status_code = curl_getinfo($ch, CURLINFO_HTTP_CODE); 
-			
-			curl_close($ch);
-
-			$message = array();
-
-			$message['hubspot'] = $status_code;
-
-			if($status_code != 204){
-				wp_send_json($message);
-			}
-
-			// $endpoint = 'http://api.visualbi.com/gotowebinar/register/';
-
-			// $str_post = "&email=" . urlencode($email) 
-			// . "&hs_context=" . urlencode($hs_context_json);
-
-
-			// $ch = curl_init();
-			// curl_setopt($ch, CURLOPT_POST, true);
-			// curl_setopt($ch, CURLOPT_POSTFIELDS, $str_post);
-			// curl_setopt($ch, CURLOPT_URL, $endpoint);
-			// curl_setopt($ch, CURLOPT_RETURNTRANSFER, true); 
-
-			// $response    = curl_exec($ch); 
-			// $status_code = curl_getinfo($ch, CURLINFO_HTTP_CODE); 
-			
-			// curl_close($ch);
-
-			// $message['gotowebinar'] = $status_code;
-
-		    wp_send_json($message);		
-
-		}
+	public function newsletters_submission()
+	{
+	
+	
+	}
 
 
 }

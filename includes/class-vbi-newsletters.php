@@ -199,6 +199,7 @@ class Vbi_Newsletters {
 
 		$widget = new Vbi_Newsletters_Widget( $this->get_plugin_name(), $this->get_version() );
 		$this->loader->add_action( 'widgets_init', $widget, 'vbi_newsletter_widget' );
+		$this->loader->add_action( 'admin_enqueue_scripts', $widget, 'widgets_scripts' );
 	}
 
 	/**
